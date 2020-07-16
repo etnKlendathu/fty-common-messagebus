@@ -19,10 +19,7 @@
     =========================================================================
 */
 
-#ifndef FTY_COMMON_MESSAGEBUS_DISPATCHER_H_INCLUDED
-#define FTY_COMMON_MESSAGEBUS_DISPATCHER_H_INCLUDED
-
-#include "fty_common_messagebus_library.h"
+#pragma once
 
 #include <functional>
 #include <map>
@@ -33,7 +30,8 @@ namespace messagebus {
  * \brief Callable dispatcher based on std::map.
  */
 template <class KeyType, typename WorkFunctionType, typename MissingFunctionType>
-class Dispatcher {
+class Dispatcher
+{
 public:
     /// \brief Map of (key -> callable).
     using Map = std::map<KeyType, WorkFunctionType>;
@@ -42,14 +40,21 @@ public:
      * \brief Constructor without default handler.
      * \param map Function map.
      */
-    Dispatcher(Map map) : Dispatcher(map, MissingFunctionType()) { }
+    Dispatcher(Map map)
+        : Dispatcher(map, MissingFunctionType())
+    {
+    }
 
     /**
      * \brief Constructor with default handler.
      * \param map Function map.
      * \param defaultHandler Default handler callable.
      */
-    Dispatcher(Map map, MissingFunctionType defaultHandler) : m_map(map), m_defaultHandler(defaultHandler) { }
+    Dispatcher(Map map, MissingFunctionType defaultHandler)
+        : m_map(map)
+        , m_defaultHandler(defaultHandler)
+    {
+    }
 
     /**
      * \brief Dispatch a callable based on a key.
@@ -59,7 +64,8 @@ public:
      * \warning Dispatching an unknown key without a default handler will throw an std::bad_function_call.
      */
     template <typename... ArgsType>
-    typename WorkFunctionType::result_type operator()(const KeyType& key, ArgsType&&... args) {
+    typename WorkFunctionType::result_type operator()(const KeyType& key, ArgsType&&... args)
+    {
         auto it = m_map.find(key);
         if (it != m_map.end()) {
             return it->second(std::forward<ArgsType>(args)...);
@@ -68,12 +74,8 @@ public:
     }
 
 private:
-    Map m_map;
+    Map                 m_map;
     MissingFunctionType m_defaultHandler;
-} ;
+};
 
-}
-
-void fty_common_messagebus_dispatcher_test(bool verbose);
-
-#endif
+} // namespace messagebus

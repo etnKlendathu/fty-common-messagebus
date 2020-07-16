@@ -1,5 +1,5 @@
 /*  =========================================================================
-    fty_common_messagebus_dto - class description
+    fty_common_messagebus_exception - class description
 
     Copyright (C) 2014 - 2020 Eaton
 
@@ -19,22 +19,25 @@
     =========================================================================
 */
 
-#ifndef FTY_COMMON_MESSAGEBUS_DTO_H_INCLUDED
-#define FTY_COMMON_MESSAGEBUS_DTO_H_INCLUDED
+#pragma once
+#include <stdexcept>
 
-#include <string>
-#include <list>
+namespace messagebus {
 
-#include "fty_common_messagebus.h"
+class MessageBusException : public std::runtime_error
+{
+public:
+    MessageBusException(const std::string& what)
+        : std::runtime_error(what)
+    {
+    }
 
-struct FooBar {
-    std::string foo;
-    std::string bar;
-    FooBar() = default;
-    FooBar(const std::string& foo, const std::string& bar) : foo(foo), bar(bar) { }
+    MessageBusException(const char* what)
+        : std::runtime_error(what)
+    {
+    }
+
+    ~MessageBusException() = default;
 };
 
-void operator<< (messagebus::UserData& data, const FooBar& object);
-void operator>> (messagebus::UserData& payload, FooBar& object);
-
-#endif
+} // namespace messagebus
